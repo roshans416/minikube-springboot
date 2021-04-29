@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "3"
+  labels:
+    app: spring-boot-so1
+  name: spring-boot-so1
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: spring-boot-so1
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: spring-boot-so1
+    spec:
+      containers:
+      - image: roshans416/spring-boot-so1
+        imagePullPolicy: Always
+        name: spring-boot-so1
+        readinessProbe:
+          tcpSocket:
+            port: 8086
+          initialDelaySeconds: 5 
+          periodSeconds: 15
+        livenessProbe:
+          tcpSocket:
+            port: 8086
+          initialDelaySeconds: 15 
+          periodSeconds: 15
+        ports:
+        - containerPort: 8086
+          protocol: TCP

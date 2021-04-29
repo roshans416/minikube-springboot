@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql-standalone
+  name: mysql-standalone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-standalone
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: mysql-standalone
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: MYSQL_PASSWORD
+          value: password
+        - name: MYSQL_USER
+          value: sa
+        - name: MYSQL_DATABASE
+          value: test
+        image: mysql:5.6
+        imagePullPolicy: IfNotPresent
+        name: mysql-standalone
